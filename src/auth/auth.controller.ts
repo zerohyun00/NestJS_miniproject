@@ -1,34 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Post('send-code')
+  async sendVerficationCode(@Body('email') email: string) {
+    await this.authService.sendVerificationCode(email);
+    return { message: '인증번호가 이메일로 전송되었습니다.' };
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  // 인증번호 확인
+  @Post('verify-code')
+  async verifyCode(@Body('email') email: string, @Body('code') code: string) {
+    const isVerified = await this.authService.verifyCode(email, code);
+    return { message: isVerified ? '인증번호가 확인되었습니다.' : '인증 실패' };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Post('register')
+  postRegister(@Body() body: RegisterUserDto) {
+    return this.authService.registerWithEmail(body);
   }
 }

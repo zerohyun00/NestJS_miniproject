@@ -16,3 +16,7 @@ export const ENV_DB_USERNAME_KEY = 'DB_USERNAME';
 export const ENV_DB_PASSWORD_KEY = 'DB_PASSWORD';
 // 데이터베이스 이름
 export const ENV_DB_DATABASE_KEY = 'DB_DATABASE';
+// 노드 메일러 gmail 계정
+export const ENV_GMAIL_ADDRESS_KEY = 'ENV_GMAIL_ADDRESS_KEY';
+// 노드 메일러 gmail 비밀번호
+export const ENV_GMAIL_PASSWORD_KEY = 'ENV_GMAIL_PASSWORD_KEY';

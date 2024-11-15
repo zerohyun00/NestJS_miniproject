@@ -14,3 +14,11 @@ export abstract class BaseModel {
   @CreateDateColumn()
   createdAt: Date;
 }
+
+export abstract class PartialBaseModel {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}

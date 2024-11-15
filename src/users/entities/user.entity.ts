@@ -1,26 +1,57 @@
+import { Exclude } from 'class-transformer';
+import { IsEmail, IsString, Length } from 'class-validator';
 import { BaseModel } from 'src/common/entities/base.entity';
-import { Column } from 'typeorm';
+import { emailValidationMessage } from 'src/common/validation-message/email-validation.message';
+import { lengthValidationMessage } from 'src/common/validation-message/length-validation.message';
+import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
+import { OrdersModel } from 'src/orders/entities/order.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
-export enum Gender {
-  MALE = 'male',
-  FEMALE = 'female',
+export enum GenderEnum {
+  MALE = '남자',
+  FEMALE = '여자',
 }
-
+@Entity()
 export class UsersModel extends BaseModel {
-  @Column()
+  @Column({
+    unique: true,
+  })
+  @IsString({
+    message: stringValidationMessage,
+  })
+  @IsEmail({}, { message: emailValidationMessage })
   email: string;
 
   @Column()
+  @IsString({
+    message: stringValidationMessage,
+  })
+  @Length(2, 10, {
+    message: lengthValidationMessage,
+  })
+  @Exclude({
+    toPlainOnly: true,
+  })
   password: string;
 
   @Column({
-    enum: Gender,
+    enum: Object.values(GenderEnum),
   })
-  gender: Gender;
+  gender: GenderEnum;
 
   @Column()
+  @IsString({
+    message: stringValidationMessage,
+  })
   address: string;
 
   @Column()
+  @IsString({
+    message: stringValidationMessage,
+  })
   mobile_number: string;
+
+  @OneToMany(() => OrdersModel, (order) => order.user)
+  @JoinColumn({ name: 'user_id' })
+  orders: OrdersModel[];
 }
