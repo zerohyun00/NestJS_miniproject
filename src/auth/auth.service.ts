@@ -9,12 +9,7 @@ import { UsersService } from 'src/users/users.service';
 import { ConfigService } from '@nestjs/config';
 import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
-import {
-  ENV_GMAIL_ADDRESS_KEY,
-  ENV_GMAIL_PASSWORD_KEY,
-  ENV_HASH_ROUNDS_KEY,
-  ENV_JWT_SECRET_KEY,
-} from 'src/common/const/env-keys.const';
+import { ENV_GMAIL_ADDRESS_KEY } from 'src/common/const/env-keys.const';
 import * as nodemailer from 'nodemailer';
 import { UsersModel } from 'src/users/entities/user.entity';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
@@ -33,22 +28,18 @@ export class AuthService {
     if (user) {
       throw new BadRequestException('이미 가입된 이메일입니다');
     }
-    const gmailUser = this.configService.get<string>(ENV_GMAIL_ADDRESS_KEY);
-    const gmailPass = this.configService.get<string>(ENV_GMAIL_PASSWORD_KEY);
-
-    console.log('Gmail User:', gmailUser);
-    console.log('Gmail Pass:', gmailPass);
 
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000,
     ).toString();
     await this.cacheManager.set(email, verificationCode, 180);
+    console.log(`Verification code stored for ${email}: ${verificationCode}`);
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: this.configService.get<string>('ENV_GMAIL_ADDRESS_KEY'), // 올바른 키 사용
-        pass: this.configService.get<string>('ENV_GMAIL_PASSWORD_KEY'), // 올바른 키 사용
+        user: this.configService.get<string>('ENV_GMAIL_ADDRESS_KEY'),
+        pass: this.configService.get<string>('ENV_GMAIL_PASSWORD_KEY'),
       },
     });
 
@@ -63,6 +54,7 @@ export class AuthService {
   async verifyCode(email: string, code: string): Promise<boolean> {
     const pickCode = await this.cacheManager.get<string>(email);
     console.log(`Cached code for ${email}:`, pickCode);
+
     if (!pickCode) {
       throw new BadRequestException(
         '인증번호가 만료되었거나 존재하지 않습니다.',
@@ -73,26 +65,30 @@ export class AuthService {
       throw new BadRequestException('인증번호가 올바르지 않습니다.');
     }
 
+    // 인증 완료 상태를 Redis에 저장
+    await this.cacheManager.set(`${email}-verified`, true, 3600);
+    console.log(`Email ${email} verified.`);
+
+    // 인증번호 삭제
     await this.cacheManager.del(email);
 
     return true;
   }
 
   async registerWithEmail(user: RegisterUserDto) {
-    const isVerified = await this.verifyCode(user.email, user.verificationCode);
+    const isVerified = await this.cacheManager.get<boolean>(
+      `${user.email}-verified`,
+    );
     if (!isVerified) {
       throw new BadRequestException('이메일 인증이 완료되지 않았습니다.');
     }
 
-    const hashed = await bcrypt.hash(
-      user.password,
-      this.configService.get<string>(ENV_HASH_ROUNDS_KEY),
-    );
+    const hashed = await bcrypt.hash(user.password, 10);
     const newUser = await this.usersService.createUser({
       ...user,
       password: hashed,
     });
-
+    await this.cacheManager.del(`${user.email}-verified`);
     return this.loginUser(newUser);
   }
 
@@ -134,7 +130,7 @@ export class AuthService {
     };
 
     return this.jwtService.sign(payload, {
-      secret: this.configService.get<string>(ENV_JWT_SECRET_KEY),
+      secret: this.configService.get<string>('JWT_SECRET'),
       // seconds로 입력해야 함
       expiresIn: tokenType === 'access' ? 300 : 3600,
     });

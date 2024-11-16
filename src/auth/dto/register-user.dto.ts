@@ -10,9 +10,9 @@ export class RegisterUserDto extends PickType(UsersModel, [
   'mobile_number',
   'password',
 ]) {
-  @IsString({
-    message: stringValidationMessage,
+  @IsEnum(GenderEnum, {
+    message: `성별은 ${Object.values(GenderEnum).join(', ')} 중 하나여야 합니다.`,
   })
-  @IsNotEmpty({ message: '인증번호를 입력해주세요!' })
-  verificationCode: string;
+  @IsNotEmpty({ message: '성별을 입력해주세요!' })
+  gender: GenderEnum;
 }
