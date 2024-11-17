@@ -18,6 +18,12 @@ import {
 import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
 import { OrdersModel } from './orders/entities/order.entity';
+import { ProductsModule } from './products/products.module';
+import { CategoriesModule } from './categories/categories.module';
+import { AdminsModule } from './admins/admins.module';
+import { CategoriesModel } from './categories/entities/category.entity';
+import { ProductsModel } from './products/entities/product.entity';
+import { ProductsImageModel } from './products/entities/product-image.entity';
 
 @Module({
   imports: [
@@ -32,13 +38,22 @@ import { OrdersModel } from './orders/entities/order.entity';
       username: process.env[ENV_DB_USERNAME_KEY],
       password: process.env[ENV_DB_PASSWORD_KEY],
       database: process.env[ENV_DB_DATABASE_KEY],
-      entities: [UsersModel, OrdersModel],
+      entities: [
+        UsersModel,
+        OrdersModel,
+        CategoriesModel,
+        ProductsModel,
+        ProductsImageModel,
+      ],
       synchronize: true,
     }),
     UsersModule,
     CommonModule,
     AuthModule,
     OrdersModule,
+    ProductsModule,
+    CategoriesModule,
+    AdminsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
