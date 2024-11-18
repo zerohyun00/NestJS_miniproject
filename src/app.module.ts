@@ -23,7 +23,10 @@ import { CategoriesModule } from './categories/categories.module';
 import { AdminsModule } from './admins/admins.module';
 import { CategoriesModel } from './categories/entities/category.entity';
 import { ProductsModel } from './products/entities/product.entity';
-import { ProductsImageModel } from './products/entities/product-image.entity';
+
+import { AdminsModel } from './admins/entities/admin.entity';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './admins/guard/roles.guard';
 
 @Module({
   imports: [
@@ -43,7 +46,7 @@ import { ProductsImageModel } from './products/entities/product-image.entity';
         OrdersModel,
         CategoriesModel,
         ProductsModel,
-        ProductsImageModel,
+        AdminsModel,
       ],
       synchronize: true,
     }),
@@ -56,6 +59,12 @@ import { ProductsImageModel } from './products/entities/product-image.entity';
     AdminsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

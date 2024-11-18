@@ -1,5 +1,6 @@
 import { PickType } from '@nestjs/mapped-types';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { emptyValidationMessage } from 'src/common/validation-message/empty-validation.message';
 import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
 import { GenderEnum, UsersModel } from 'src/users/entities/user.entity';
 
@@ -13,6 +14,6 @@ export class RegisterUserDto extends PickType(UsersModel, [
   @IsEnum(GenderEnum, {
     message: `성별은 ${Object.values(GenderEnum).join(', ')} 중 하나여야 합니다.`,
   })
-  @IsNotEmpty({ message: '성별을 입력해주세요!' })
+  @IsNotEmpty({ message: emptyValidationMessage })
   gender: GenderEnum;
 }

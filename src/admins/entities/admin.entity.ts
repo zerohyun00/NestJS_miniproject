@@ -1,3 +1,4 @@
+import { RolesEnum } from 'src/common/const/roles.const';
 import { BaseModel } from 'src/common/entities/base.entity';
 import { Column, Entity } from 'typeorm';
 
@@ -10,4 +11,11 @@ export class AdminsModel extends BaseModel {
 
   @Column()
   password: string;
+
+  @Column({
+    type: 'enum',
+    enum: RolesEnum,
+    default: RolesEnum.ADMIN,
+  })
+  role: RolesEnum;
 }

@@ -3,7 +3,7 @@ import { UsersModel } from '../users/entities/user.entity';
 import { OrdersModel } from '../orders/entities/order.entity';
 import { CategoriesModel } from '../categories/entities/category.entity';
 import { ProductsModel } from '../products/entities/product.entity';
-import { ProductsImageModel } from '../products/entities/product-image.entity';
+
 import { AdminsModel } from '../admins/entities/admin.entity';
 import * as dotenv from 'dotenv';
 import {
@@ -28,7 +28,6 @@ export const AppDataSource = new DataSource({
     OrdersModel,
     CategoriesModel,
     ProductsModel,
-    ProductsImageModel,
     AdminsModel,
   ],
   migrations: ['src/db/migrations/*.ts'],
