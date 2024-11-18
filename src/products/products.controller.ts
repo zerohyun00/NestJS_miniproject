@@ -22,8 +22,9 @@ export class ProductsController {
   @UseInterceptors(FilesInterceptor('image'))
   async createProduct(
     @Body() createProductDto: CreateProductDto,
-    @UploadedFiles() file: Express.Multer.File,
+    @UploadedFiles() files: Express.Multer.File[],
   ) {
-    return this.productsService.createProduct(createProductDto, file?.filename);
+    const fileNames = files.map((file) => file.filename);
+    return this.productsService.createProduct(createProductDto, fileNames);
   }
 }

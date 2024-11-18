@@ -14,13 +14,13 @@ export class ProductsService {
     private readonly categoriesService: CategoriesService,
   ) {}
 
-  async createProduct(createProductDto: CreateProductDto, image: string) {
+  async createProduct(createProductDto: CreateProductDto, images: string[]) {
     const { categoryId, ...productData } = createProductDto;
     const category = await this.categoriesService.getCategoryById(categoryId);
 
     const product = this.productRepository.create({
       ...productData,
-      image,
+      images, // 콤마로 구분된 파일 이름들
       category,
     });
 

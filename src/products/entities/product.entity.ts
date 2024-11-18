@@ -16,10 +16,10 @@ export class ProductsModel extends BaseModel {
   @Column()
   quantity: number;
 
-  @Column()
-  image?: string;
+  @Column('simple-array', { nullable: true })
+  images: string[];
 
-  @Column('simple-json')
+  @Column('simple-json', { nullable: true })
   sizes: string[];
 
   @ManyToOne(() => CategoriesModel, (category) => category.products, {
