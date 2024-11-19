@@ -6,24 +6,26 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { AdminsLoginDto } from './dto/login-admin.dto';
 import { RolesEnum } from 'src/common/const/roles.const';
+import { AuthService } from 'src/auth/auth.service'; // AuthService 추가
 
 @Injectable()
 export class AdminsService {
   constructor(
     @InjectRepository(AdminsModel)
     private readonly adminRepository: Repository<AdminsModel>,
-    private readonly jwtService: JwtService,
+    private readonly authService: AuthService, // AuthService 의존성 주입
   ) {}
 
   async login(adminLoginDto: AdminsLoginDto) {
     const { email, password } = adminLoginDto;
     const admin = await this.validateAdmin(email, password);
 
-    // JWT 생성
-    const payload = { email: admin.email, role: RolesEnum.ADMIN };
-    const accessToken = this.jwtService.sign(payload);
-
-    return { accessToken };
+    // AuthService를 활용해 JWT 생성
+    return this.authService.loginUser({
+      email: admin.email,
+      id: admin.id,
+      role: RolesEnum.ADMIN,
+    });
   }
 
   private async validateAdmin(email: string, password: string) {
@@ -47,6 +49,10 @@ export class AdminsService {
       throw new UnauthorizedException('잘못된 비밀번호입니다.');
     }
 
-    return { email: admin.email, role: RolesEnum.ADMIN };
+    return admin;
+  }
+
+  async getAdminByEmail(email: string): Promise<AdminsModel | null> {
+    return this.adminRepository.findOne({ where: { email } });
   }
 }

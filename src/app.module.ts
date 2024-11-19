@@ -27,6 +27,7 @@ import { ProductsModel } from './products/entities/product.entity';
 import { AdminsModel } from './admins/entities/admin.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './admins/guard/roles.guard';
+import { AccessTokenGuard } from './auth/guard/bearer-token-guard';
 
 @Module({
   imports: [

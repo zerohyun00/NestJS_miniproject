@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -9,15 +11,17 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { AdminGuard } from 'src/admins/guard/admins.guard';
 import { RolesEnum } from 'src/common/const/roles.const';
 import { Roles } from 'src/admins/decorator/roles.decorator';
+import { AccessTokenGuard } from 'src/auth/guard/bearer-token-guard';
+import { PaginateProductsDto } from './dto/paginate-products.dto';
 
-@Controller('admin/products')
+@Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post('upload')
+  @UseGuards(AccessTokenGuard)
   @Roles(RolesEnum.ADMIN)
   @UseInterceptors(FilesInterceptor('image'))
   async createProduct(
@@ -26,5 +30,10 @@ export class ProductsController {
   ) {
     const fileNames = files.map((file) => file.filename);
     return this.productsService.createProduct(createProductDto, fileNames);
+  }
+
+  @Get()
+  getProducts(@Query() query: PaginateProductsDto) {
+    return this.productsService.paginateProducts(query);
   }
 }

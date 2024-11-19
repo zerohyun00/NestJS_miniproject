@@ -9,10 +9,14 @@ import { UsersService } from 'src/users/users.service';
 import { ConfigService } from '@nestjs/config';
 import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
-import { ENV_GMAIL_ADDRESS_KEY } from 'src/common/const/env-keys.const';
+import {
+  ENV_GMAIL_ADDRESS_KEY,
+  ENV_JWT_SECRET_KEY,
+} from 'src/common/const/env-keys.const';
 import * as nodemailer from 'nodemailer';
 import { UsersModel } from 'src/users/entities/user.entity';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { AdminsModel } from 'src/admins/entities/admin.entity';
 
 @Injectable()
 export class AuthService {
@@ -112,27 +116,59 @@ export class AuthService {
     return existingUser;
   }
 
-  loginUser(user: Pick<UsersModel, 'email' | 'id'>) {
+  loginUser(user: Pick<UsersModel | AdminsModel, 'email' | 'id' | 'role'>) {
+    console.log('Signing Token for User:', user);
     return {
       accessToken: this.signToken(user, 'access'),
       refreshToken: this.signToken(user, 'refresh'),
     };
   }
 
+  verifyToken(token: string) {
+    try {
+      console.log('Verifying token:', token);
+      const decoded = this.jwtService.verify(token, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
+      console.log('Decoded Token:', decoded); // 여기서 type 확인
+      return decoded;
+    } catch (e) {
+      console.error('Token verification error:', e.message);
+      throw new UnauthorizedException('토큰이 만료됐거나 잘못된 토큰입니다.');
+    }
+  }
+
+  extractTokenFromHeader(header: string, isBearer: boolean) {
+    const splitToken = header.split(' ');
+    console.log('Authorization Header:', header);
+
+    const prefix = isBearer ? 'Bearer' : 'refresh';
+
+    if (splitToken.length !== 2 || splitToken[0] !== prefix) {
+      throw new UnauthorizedException('잘못된 토큰 형식입니다!');
+    }
+
+    const token = splitToken[1];
+    console.log('Extracted Token:', token);
+
+    return token;
+  }
+
   signToken(
-    user: Pick<UsersModel, 'email' | 'id'>,
+    user: Pick<UsersModel | AdminsModel, 'email' | 'id' | 'role'>,
     tokenType: 'access' | 'refresh',
   ) {
     const payload = {
       email: user.email,
       sub: user.id,
+      role: user.role,
       type: tokenType,
     };
+    console.log('Signing Token with Payload:', payload);
 
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_SECRET'),
-      // seconds로 입력해야 함
-      expiresIn: tokenType === 'access' ? 300 : 3600,
+      expiresIn: tokenType === 'access' ? 300 : 3600, // seconds
     });
   }
 }

@@ -9,11 +9,17 @@ import { extname } from 'path';
 import * as multer from 'multer';
 import { PRODUCT_IMAGE_PATH } from 'src/common/const/path.const';
 import { v4 as uuid } from 'uuid';
+import { AuthModule } from 'src/auth/auth.module';
+import { UsersModule } from 'src/users/users.module';
+import { AdminsModule } from 'src/admins/admins.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProductsModel]),
     CategoriesModule,
+    AuthModule,
+    UsersModule,
+    AdminsModule,
     MulterModule.register({
       limits: {
         fileSize: 1000000,

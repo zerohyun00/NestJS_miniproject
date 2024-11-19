@@ -20,3 +20,6 @@ export const ENV_DB_DATABASE_KEY = 'DB_DATABASE';
 export const ENV_GMAIL_ADDRESS_KEY = 'ENV_GMAIL_ADDRESS_KEY';
 // 노드 메일러 gmail 비밀번호
 export const ENV_GMAIL_PASSWORD_KEY = 'ENV_GMAIL_PASSWORD_KEY';
+
+export const PROTOCOL = 'http';
+export const HOST = 'localhost:3000';
