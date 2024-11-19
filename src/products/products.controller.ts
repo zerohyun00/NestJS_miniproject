@@ -15,8 +15,10 @@ import { RolesEnum } from 'src/common/const/roles.const';
 import { Roles } from 'src/admins/decorator/roles.decorator';
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token-guard';
 import { PaginateProductsDto } from './dto/paginate-products.dto';
+import { LogInterceptor } from 'src/common/interceptor/log.interceptor';
 
 @Controller('products')
+@UseInterceptors(LogInterceptor)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 

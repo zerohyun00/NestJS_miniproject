@@ -28,6 +28,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.4.8",
     "@nestjs/serve-static": "^4.0.2",
+    "@nestjs/swagger": "^8.0.7",
     "@nestjs/typeorm": "^10.0.2",
     "@types/cache-manager-ioredis": "^2.0.6",
     "@types/uuid": "^10.0.0",
