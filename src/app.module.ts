@@ -9,6 +9,7 @@ import { UsersModel } from './users/entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import {
+  DB_TYPE,
   ENV_DB_DATABASE_KEY,
   ENV_DB_HOST_KEY,
   ENV_DB_PASSWORD_KEY,
@@ -37,9 +38,9 @@ import { AddressModel } from './orders/entities/adress.entity';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
+      type: DB_TYPE,
       host: process.env[ENV_DB_HOST_KEY],
-      port: parseInt(process.env[ENV_DB_PORT_KEY]),
+      port: parseInt(process.env[ENV_DB_PORT_KEY] || '5432'),
       username: process.env[ENV_DB_USERNAME_KEY],
       password: process.env[ENV_DB_PASSWORD_KEY],
       database: process.env[ENV_DB_DATABASE_KEY],
@@ -51,7 +52,7 @@ import { AddressModel } from './orders/entities/adress.entity';
         AdminsModel,
         AddressModel,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     UsersModule,
     CommonModule,

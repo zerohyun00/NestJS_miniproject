@@ -1,3 +1,4 @@
+export const ENV_DB_TYPE = '';
 // 서버 프로토콜 -> http / https
 export const ENV_PROTOCOL_KEY = 'PROTOCOL';
 // 서버 호스트 -> localhost:3000
@@ -23,3 +24,4 @@ export const ENV_GMAIL_PASSWORD_KEY = 'ENV_GMAIL_PASSWORD_KEY';
 
 export const PROTOCOL = 'http';
 export const HOST = 'localhost:3000';
+export const DB_TYPE = 'postgres';
