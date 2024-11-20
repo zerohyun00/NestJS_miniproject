@@ -1,13 +1,13 @@
-import { IsNumber } from 'class-validator';
 import { PartialBaseModel } from 'src/common/entities/base.entity';
-import { numberValidationMessage } from 'src/common/validation-message/number-validation.message';
+import { ProductsModel } from 'src/products/entities/product.entity';
 import { UsersModel } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
-  OneToMany,
 } from 'typeorm';
 
 export enum OrderStatus {
@@ -16,6 +16,7 @@ export enum OrderStatus {
   CANCELLED = '취소됨',
   COMPLETED = '주문 완료',
 }
+
 @Entity()
 export class OrdersModel extends PartialBaseModel {
   @CreateDateColumn()
@@ -28,15 +29,22 @@ export class OrdersModel extends PartialBaseModel {
   })
   status: OrderStatus;
 
-  @Column()
-  @IsNumber(
-    {},
-    {
-      message: numberValidationMessage,
-    },
-  )
+  @Column('decimal')
   total_amount: number;
 
-  @ManyToOne(() => UsersModel, (user) => user.orders)
+  @Column()
+  recipient_name: string;
+
+  @Column()
+  phone_number: string;
+
+  @Column()
+  address: string;
+
+  @ManyToOne(() => UsersModel, (user) => user.orders, { eager: true })
   user: UsersModel;
+
+  @ManyToMany(() => ProductsModel)
+  @JoinTable()
+  products: ProductsModel[];
 }

@@ -35,6 +35,7 @@ export class ProductsController {
   }
 
   @Get()
+  @Roles(RolesEnum.USER)
   getProducts(@Query() query: PaginateProductsDto) {
     return this.productsService.paginateProducts(query);
   }

@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { LogInterceptor } from 'src/common/interceptor/log.interceptor';
 
 @Controller('auth')
+@UseInterceptors(LogInterceptor)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

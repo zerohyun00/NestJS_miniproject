@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-ioredis';
 import { AdminsModule } from 'src/admins/admins.module';
+import { AccessTokenGuard } from './guard/bearer-token-guard';
 
 @Module({
   imports: [
@@ -27,6 +28,6 @@ import { AdminsModule } from 'src/admins/admins.module';
   ],
   exports: [AuthService],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, AccessTokenGuard],
 })
 export class AuthModule {}

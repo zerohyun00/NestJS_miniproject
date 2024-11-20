@@ -22,12 +22,9 @@ export async function createAdmin(dataSource: DataSource) {
     email: adminData.email,
   });
   if (existingAdmin) {
-    console.log('이미 존재하는 계정 입니다!');
     return;
   }
 
-  // 관리자 계정 생성
   const newAdmin = adminRepository.create(adminData);
   await adminRepository.save(newAdmin);
-  console.log('어드민 계정 생성 완료');
 }

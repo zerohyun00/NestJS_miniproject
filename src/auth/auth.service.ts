@@ -37,7 +37,6 @@ export class AuthService {
       100000 + Math.random() * 900000,
     ).toString();
     await this.cacheManager.set(email, verificationCode, 180);
-    console.log(`Verification code stored for ${email}: ${verificationCode}`);
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -57,8 +56,6 @@ export class AuthService {
 
   async verifyCode(email: string, code: string): Promise<boolean> {
     const pickCode = await this.cacheManager.get<string>(email);
-    console.log(`Cached code for ${email}:`, pickCode);
-
     if (!pickCode) {
       throw new BadRequestException(
         '인증번호가 만료되었거나 존재하지 않습니다.',
@@ -71,7 +68,6 @@ export class AuthService {
 
     // 인증 완료 상태를 Redis에 저장
     await this.cacheManager.set(`${email}-verified`, true, 3600);
-    console.log(`Email ${email} verified.`);
 
     // 인증번호 삭제
     await this.cacheManager.del(email);
@@ -117,7 +113,6 @@ export class AuthService {
   }
 
   loginUser(user: Pick<UsersModel | AdminsModel, 'email' | 'id' | 'role'>) {
-    console.log('Signing Token for User:', user);
     return {
       accessToken: this.signToken(user, 'access'),
       refreshToken: this.signToken(user, 'refresh'),
@@ -126,21 +121,17 @@ export class AuthService {
 
   verifyToken(token: string) {
     try {
-      console.log('Verifying token:', token);
       const decoded = this.jwtService.verify(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
-      console.log('Decoded Token:', decoded); // 여기서 type 확인
       return decoded;
     } catch (e) {
-      console.error('Token verification error:', e.message);
       throw new UnauthorizedException('토큰이 만료됐거나 잘못된 토큰입니다.');
     }
   }
 
   extractTokenFromHeader(header: string, isBearer: boolean) {
     const splitToken = header.split(' ');
-    console.log('Authorization Header:', header);
 
     const prefix = isBearer ? 'Bearer' : 'refresh';
 
@@ -149,7 +140,6 @@ export class AuthService {
     }
 
     const token = splitToken[1];
-    console.log('Extracted Token:', token);
 
     return token;
   }
@@ -164,7 +154,6 @@ export class AuthService {
       role: user.role,
       type: tokenType,
     };
-    console.log('Signing Token with Payload:', payload);
 
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_SECRET'),

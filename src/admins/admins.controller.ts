@@ -16,7 +16,6 @@ export class AdminsController {
 
   @Post('login')
   async login(@Body() adminLoginDto: AdminsLoginDto) {
-    console.log('Admin Login DTO:', adminLoginDto);
     return this.adminsService.login(adminLoginDto);
   }
 }

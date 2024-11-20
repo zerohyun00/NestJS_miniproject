@@ -28,6 +28,7 @@ import { AdminsModel } from './admins/entities/admin.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './admins/guard/roles.guard';
 import { AccessTokenGuard } from './auth/guard/bearer-token-guard';
+import { AddressModel } from './orders/entities/adress.entity';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { AccessTokenGuard } from './auth/guard/bearer-token-guard';
         CategoriesModel,
         ProductsModel,
         AdminsModel,
+        AddressModel,
       ],
       synchronize: true,
     }),

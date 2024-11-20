@@ -21,16 +21,12 @@ export class BearerTokenGuard implements CanActivate {
     const rawToken = req.headers['authorization'];
 
     if (!rawToken) {
-      console.log('Missing Authorization Header');
       throw new UnauthorizedException('토큰이 없습니다!');
     }
 
     const token = this.authService.extractTokenFromHeader(rawToken, true);
 
-    console.log('Verifying Token...');
     const result = await this.authService.verifyToken(token);
-
-    console.log('Verified Token Payload:', result);
 
     let user;
     if (result.role === 'ADMIN') {
@@ -42,14 +38,12 @@ export class BearerTokenGuard implements CanActivate {
     }
 
     if (!user) {
-      console.log('User/Admin Not Found for Email:', result.email);
       throw new UnauthorizedException('유효하지 않은 사용자/관리자입니다.');
     }
 
     req.user = user;
     req.token = token;
     req.tokenType = result.type;
-    console.log('Token Type Set in Request:', req.tokenType);
 
     return true;
   }
@@ -61,8 +55,6 @@ export class AccessTokenGuard extends BearerTokenGuard {
     await super.canActivate(context);
 
     const req = context.switchToHttp().getRequest();
-
-    console.log('Token Type:', req.tokenType);
 
     if (req.tokenType !== 'access') {
       throw new UnauthorizedException('Access Token이 아닙니다.');
