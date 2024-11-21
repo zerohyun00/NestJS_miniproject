@@ -6,6 +6,7 @@ import { UsersModel } from './entities/user.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { AdminsModule } from 'src/admins/admins.module';
 import { AddressModel } from 'src/orders/entities/adress.entity';
+import { UsersRepository } from './entities/user.repository';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { AddressModel } from 'src/orders/entities/adress.entity';
   ],
   exports: [UsersService, TypeOrmModule],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, UsersRepository],
 })
 export class UsersModule {}
