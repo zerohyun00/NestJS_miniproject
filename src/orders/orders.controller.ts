@@ -14,7 +14,6 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token-guard';
 import { LogInterceptor } from 'src/common/interceptor/log.interceptor';
 import { User } from 'src/users/decorator/users.decorator';
-import { UsersModel } from 'src/users/entities/user.entity';
 import { Roles } from 'src/admins/decorator/roles.decorator';
 import { RolesEnum } from 'src/common/const/roles.const';
 

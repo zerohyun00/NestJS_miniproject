@@ -6,6 +6,7 @@ import { AdminsModel } from './entities/admin.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from 'src/auth/auth.module';
+import { AdminsRepository } from './entities/admin.repository';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { AuthModule } from 'src/auth/auth.module';
     }),
   ],
   controllers: [AdminsController],
-  providers: [AdminsService],
+  providers: [AdminsService, AdminsRepository],
   exports: [AdminsService],
 })
 export class AdminsModule {}
