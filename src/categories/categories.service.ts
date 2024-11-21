@@ -1,15 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CategoriesModel } from './entities/category.entity';
-import { Repository } from 'typeorm';
+import { CategoriesRepository } from './entities/category.repository';
 import { CreateCategoryDto } from './dto/create-category.dto';
 
 @Injectable()
 export class CategoriesService {
-  constructor(
-    @InjectRepository(CategoriesModel)
-    private readonly categoryRepository: Repository<CategoriesModel>,
-  ) {}
+  constructor(private readonly categoryRepository: CategoriesRepository) {}
 
   async createCategory(createCategoryDto: CreateCategoryDto) {
     const category = this.categoryRepository.create(createCategoryDto);
@@ -20,6 +15,16 @@ export class CategoriesService {
     const category = await this.categoryRepository.findOne({
       where: { id: categoryId },
     });
+
+    if (!category) {
+      throw new NotFoundException('카테고리를 찾을 수 없습니다.');
+    }
+
+    return category;
+  }
+
+  async getCategoryByName(name: string) {
+    const category = await this.categoryRepository.findByName(name);
 
     if (!category) {
       throw new NotFoundException('카테고리를 찾을 수 없습니다.');

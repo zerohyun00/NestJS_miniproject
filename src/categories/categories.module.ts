@@ -6,6 +6,7 @@ import { CategoriesModel } from './entities/category.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { UsersModule } from 'src/users/users.module';
 import { AdminsModule } from 'src/admins/admins.module';
+import { CategoriesRepository } from './entities/category.repository';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { AdminsModule } from 'src/admins/admins.module';
     AdminsModule,
   ],
   controllers: [CategoriesController],
-  providers: [CategoriesService],
+  providers: [CategoriesService, CategoriesRepository],
   exports: [CategoriesService],
 })
 export class CategoriesModule {}
