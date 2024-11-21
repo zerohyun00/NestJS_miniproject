@@ -9,6 +9,7 @@ import { AdminsModule } from 'src/admins/admins.module';
 import { AddressModel } from './entities/adress.entity';
 import { ProductsModule } from 'src/products/products.module';
 import { ProductsModel } from 'src/products/entities/product.entity';
+import { OrdersRepository } from './entities/order.repository';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { ProductsModel } from 'src/products/entities/product.entity';
     forwardRef(() => ProductsModule),
   ],
   controllers: [OrdersController],
-  providers: [OrdersService],
+  providers: [OrdersService, OrdersRepository],
 })
 export class OrdersModule {}
