@@ -29,7 +29,8 @@ import { AdminsModel } from './admins/entities/admin.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './admins/guard/roles.guard';
 import { AccessTokenGuard } from './auth/guard/bearer-token-guard';
-import { AddressModel } from './orders/entities/adress.entity';
+import { AddressModel } from './address/entities/address.entity';
+import { AddressModule } from './address/address.module';
 
 @Module({
   imports: [
@@ -52,7 +53,7 @@ import { AddressModel } from './orders/entities/adress.entity';
         AdminsModel,
         AddressModel,
       ],
-      synchronize: false,
+      synchronize: true,
     }),
     UsersModule,
     CommonModule,
@@ -61,6 +62,7 @@ import { AddressModel } from './orders/entities/adress.entity';
     ProductsModule,
     CategoriesModule,
     AdminsModule,
+    AddressModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { RolesEnum } from 'src/common/const/roles.const';
 import { BaseModel } from 'src/common/entities/base.entity';
-import { AddressModel } from 'src/orders/entities/adress.entity';
+import { AddressModel } from 'src/address/entities/address.entity';
 import { OrdersModel } from 'src/orders/entities/order.entity';
 import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 

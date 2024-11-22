@@ -37,6 +37,7 @@ export class AuthService {
       100000 + Math.random() * 900000,
     ).toString();
     await this.cacheManager.set(email, verificationCode, 180);
+    console.log('인증번호: ', verificationCode);
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
