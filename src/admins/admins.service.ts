@@ -4,11 +4,20 @@ import { AdminsRepository } from './entities/admin.repository';
 import { AdminsLoginDto } from './dto/login-admin.dto';
 import { RolesEnum } from 'src/common/const/roles.const';
 import { AuthService } from 'src/auth/auth.service';
+import { UsersRepository } from 'src/users/entities/user.repository';
+import { Between, Repository } from 'typeorm';
+import { OrdersRepository } from 'src/orders/entities/order.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProductsModel } from 'src/products/entities/product.entity';
 
 @Injectable()
 export class AdminsService {
   constructor(
     private readonly adminsRepository: AdminsRepository,
+    private readonly usersRepository: UsersRepository,
+    private readonly ordersRepository: OrdersRepository,
+    @InjectRepository(ProductsModel)
+    private readonly productsRepository: Repository<ProductsModel>,
     private readonly authService: AuthService,
   ) {}
 
@@ -47,5 +56,53 @@ export class AdminsService {
 
   async getAdminByEmail(email: string) {
     return this.adminsRepository.findByEmail(email);
+  }
+
+  async getNewSignUpsCount(): Promise<number> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    return this.usersRepository.count({
+      where: { createdAt: Between(today, tomorrow) },
+    });
+  }
+
+  async getTodayOrderCount(): Promise<number> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    return this.ordersRepository.count({
+      where: { order_date: Between(today, tomorrow) },
+    });
+  }
+
+  async getMostViewed(): Promise<any> {
+    return this.productsRepository
+      .createQueryBuilder('product')
+      .orderBy('product.view_count', 'DESC')
+      .select(['product.id', 'product.name', 'product.view_count'])
+      .getOne();
+  }
+
+  async getTodaySalesTotal(): Promise<number> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const result = await this.ordersRepository
+      .createQueryBuilder('order')
+      .where('order.order_date BETWEEN :today AND :tomorrow', {
+        today,
+        tomorrow,
+      })
+      .select('SUM(order.total_amount)', 'totalSales')
+      .getRawOne();
+
+    return result?.totalSales || 0;
   }
 }

@@ -137,14 +137,13 @@ export class OrdersService {
   async deleteOrder(userId: number, orderId: number) {
     const order = await this.ordersRepository.findOne({
       where: { id: orderId },
-      relations: ['user'], // 사용자와 연관된 주문을 확인하기 위해 추가
+      relations: ['user'],
     });
 
     if (!order) {
       throw new NotFoundException('삭제하려는 주문이 존재하지 않습니다.');
     }
 
-    // 사용자 권한 확인
     if (order.user.id !== userId) {
       throw new ForbiddenException('본인이 주문한 내역만 삭제할 수 있습니다.');
     }

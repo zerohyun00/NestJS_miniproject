@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -71,5 +71,22 @@ export class ProductsService {
       count: products.length,
       next: nextUrl?.toString() ?? null,
     };
+  }
+
+  async incrementViewCount(productId: number): Promise<void> {
+    await this.productRepository.increment({ id: productId }, 'view_count', 1);
+  }
+
+  async findById(productId: number): Promise<ProductsModel> {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+      relations: ['category'], // 필요한 경우 관계 테이블도 포함
+    });
+
+    if (!product) {
+      throw new NotFoundException(`상품 ID ${productId}를 찾을 수 없습니다.`);
+    }
+
+    return product;
   }
 }

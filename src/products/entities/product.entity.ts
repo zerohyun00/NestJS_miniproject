@@ -26,4 +26,9 @@ export class ProductsModel extends BaseModel {
     onDelete: 'CASCADE',
   })
   category: CategoriesModel;
+
+  @Column({
+    default: 0,
+  })
+  view_count: number;
 }

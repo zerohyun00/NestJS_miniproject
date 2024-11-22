@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Query,
   UploadedFiles,
@@ -38,5 +39,11 @@ export class ProductsController {
   @Roles(RolesEnum.USER)
   getProducts(@Query() query: PaginateProductsDto) {
     return this.productsService.paginateProducts(query);
+  }
+
+  @Get(':id')
+  async getProduct(@Param('id') id: number) {
+    await this.productsService.incrementViewCount(id);
+    return this.productsService.findById(id);
   }
 }

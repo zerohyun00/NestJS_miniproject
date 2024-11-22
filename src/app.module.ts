@@ -71,6 +71,10 @@ import { AddressModule } from './address/address.module';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AccessTokenGuard,
+    // },
   ],
 })
 export class AppModule {}
