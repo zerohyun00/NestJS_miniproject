@@ -15,7 +15,6 @@ export class OrdersRepository
   async findByUserId(userId: number): Promise<OrdersModel[]> {
     return this.find({
       where: { user: { id: userId } },
-      relations: ['user'],
       order: { order_date: 'DESC' },
     });
   }
@@ -23,7 +22,6 @@ export class OrdersRepository
   async findOrderDetails(orderId: number): Promise<OrdersModel> {
     return this.findOne({
       where: { id: orderId },
-      relations: ['user'], // 유저 정보 포함
     });
   }
 }

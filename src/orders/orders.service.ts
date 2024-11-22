@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -20,11 +21,6 @@ export class OrdersService {
     private readonly productsRepository: Repository<ProductsModel>,
   ) {}
 
-  /**
-   * 주문 생성
-   * @param userId 사용자 ID
-   * @param createOrderDto 주문 생성 DTO
-   */
   async createOrder(userId: number, createOrderDto: CreateOrderDto) {
     const {
       address_id,
@@ -54,13 +50,6 @@ export class OrdersService {
     return this.ordersRepository.save(order);
   }
 
-  /**
-   * 주소 처리
-   * @param userId 사용자 ID
-   * @param address_id 기존 주소 ID
-   * @param new_address 신규 주소
-   * @returns 처리된 주소
-   */
   private async resolveAddress(
     userId: number,
     address_id?: number,
@@ -96,17 +85,11 @@ export class OrdersService {
     );
   }
 
-  /**
-   * 총 금액 계산
-   * @param product_details 상품 세부 정보
-   * @returns 총 금액
-   */
   private async calculateTotalAmount(
     product_details: { product_id: number; quantity: number }[],
   ): Promise<number> {
     const productIds = product_details.map((detail) => detail.product_id);
 
-    // 상품 정보 가져오기
     const products = await this.productsRepository
       .createQueryBuilder('product')
       .where('product.id IN (:...productIds)', { productIds })
@@ -117,7 +100,6 @@ export class OrdersService {
       throw new NotFoundException('상품 중 일부가 존재하지 않습니다.');
     }
 
-    // 총 금액 계산
     return product_details.reduce((sum, detail) => {
       const product = products.find((p) => p.id === detail.product_id);
       if (!product) {
@@ -129,10 +111,6 @@ export class OrdersService {
     }, 0);
   }
 
-  /**
-   * 사용자별 주문 조회
-   * @param userId 사용자 ID
-   */
   async getOrdersByUserId(userId: number) {
     const orders = await this.ordersRepository.findByUserId(userId);
     if (!orders.length) {
@@ -141,10 +119,6 @@ export class OrdersService {
     return orders;
   }
 
-  /**
-   * 특정 주문 상세 조회
-   * @param orderId 주문 ID
-   */
   async getOrderDetails(orderId: number) {
     const order = await this.ordersRepository.findOrderDetails(orderId);
     if (!order) {
@@ -153,13 +127,29 @@ export class OrdersService {
     return order;
   }
 
-  /**
-   * 모든 주문 조회
-   */
   async getAllOrders() {
     return this.ordersRepository.find({
       relations: ['user'],
       order: { order_date: 'DESC' },
     });
+  }
+
+  async deleteOrder(userId: number, orderId: number) {
+    const order = await this.ordersRepository.findOne({
+      where: { id: orderId },
+      relations: ['user'], // 사용자와 연관된 주문을 확인하기 위해 추가
+    });
+
+    if (!order) {
+      throw new NotFoundException('삭제하려는 주문이 존재하지 않습니다.');
+    }
+
+    // 사용자 권한 확인
+    if (order.user.id !== userId) {
+      throw new ForbiddenException('본인이 주문한 내역만 삭제할 수 있습니다.');
+    }
+
+    await this.ordersRepository.remove(order);
+    return { message: '주문이 성공적으로 삭제되었습니다.' };
   }
 }

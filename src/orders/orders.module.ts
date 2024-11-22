@@ -3,7 +3,7 @@ import { OrdersService } from './orders.service';
 import { OrdersController } from './orders.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrdersModel } from './entities/order.entity';
-import { UsersModule } from '../users/users.module'; // UsersModule 추가
+import { UsersModule } from '../users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { AdminsModule } from 'src/admins/admins.module';
 import { AddressModel } from '../address/entities/address.entity';
