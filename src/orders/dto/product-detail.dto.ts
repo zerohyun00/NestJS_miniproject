@@ -1,18 +1,28 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { emptyValidationMessage } from 'src/common/validation-message/empty-validation.message';
-import { numberValidationMessage } from 'src/common/validation-message/number-validation.message';
-import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
 
 export class ProductDetailDto {
-  @IsNotEmpty({ message: emptyValidationMessage })
-  @IsNumber({}, { message: numberValidationMessage })
+  @ApiProperty({
+    description: '상품의 ID',
+    example: 101,
+  })
+  @IsNotEmpty()
+  @IsNumber()
   product_id: number;
 
-  @IsNotEmpty({ message: emptyValidationMessage })
-  @IsString({ message: stringValidationMessage })
+  @ApiProperty({
+    description: '상품의 사이즈',
+    example: 'L',
+  })
+  @IsNotEmpty()
+  @IsString()
   size: string;
 
-  @IsNotEmpty({ message: emptyValidationMessage })
-  @IsNumber({}, { message: numberValidationMessage })
+  @ApiProperty({
+    description: '상품의 수량',
+    example: 2,
+  })
+  @IsNotEmpty()
+  @IsNumber()
   quantity: number;
 }

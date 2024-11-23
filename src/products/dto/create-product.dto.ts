@@ -1,30 +1,36 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, IsArray } from 'class-validator';
-import { emailValidationMessage } from 'src/common/validation-message/email-validation.message';
-import { emptyValidationMessage } from 'src/common/validation-message/empty-validation.message';
-import { numberValidationMessage } from 'src/common/validation-message/number-validation.message';
-import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
 
 export class CreateProductDto {
-  @IsNotEmpty({ message: emptyValidationMessage })
-  @IsString({ message: stringValidationMessage })
+  @ApiProperty({ description: '상품 이름', example: '상품명' })
+  @IsNotEmpty()
+  @IsString()
   name: string;
 
-  @IsNotEmpty({ message: emptyValidationMessage })
-  @IsString({ message: stringValidationMessage })
+  @ApiProperty({ description: '상품 설명', example: '상품 설명' })
+  @IsNotEmpty()
+  @IsString()
   description: string;
 
-  @IsNotEmpty({ message: emptyValidationMessage })
-  @IsNumber({}, { message: numberValidationMessage })
+  @ApiProperty({ description: '상품 가격', example: 10000 })
+  @IsNotEmpty()
+  @IsNumber()
   price: number;
 
-  @IsNotEmpty({ message: emptyValidationMessage })
-  @IsNumber({}, { message: numberValidationMessage })
+  @ApiProperty({ description: '상품 재고 수량', example: 10 })
+  @IsNotEmpty()
+  @IsNumber()
   quantity: number;
 
+  @ApiProperty({
+    description: '상품 사이즈 목록',
+    example: ['S', 'M', 'L'],
+  })
   @IsArray()
   sizes: string[];
 
-  @IsNotEmpty({ message: emptyValidationMessage })
-  @IsNumber({}, { message: numberValidationMessage })
+  @ApiProperty({ description: '카테고리 ID', example: 1 })
+  @IsNotEmpty()
+  @IsNumber()
   categoryId: number;
 }

@@ -23,12 +23,8 @@ export class CategoriesService {
     return category;
   }
 
-  async getCategoryByName(name: string) {
-    const category = await this.categoryRepository.findByName(name);
-
-    if (!category) {
-      throw new NotFoundException('카테고리를 찾을 수 없습니다.');
-    }
+  async getAllCategory() {
+    const category = await this.categoryRepository.find();
 
     return category;
   }
