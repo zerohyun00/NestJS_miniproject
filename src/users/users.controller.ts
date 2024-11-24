@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RolesEnum } from 'src/common/const/roles.const';
 import { Roles } from 'src/admins/decorator/roles.decorator';
@@ -17,10 +10,9 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { UsersModel } from './entities/user.entity';
 
 @ApiTags('Users')
-@ApiBearerAuth() // 헤더에서 토큰을 요구함
+@ApiBearerAuth()
 @UseInterceptors(LogInterceptor)
 @Controller('users')
 export class UsersController {
@@ -33,7 +25,51 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: '사용자 조회 성공',
-    type: [UsersModel], // 응답 타입 설정
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'number',
+            example: 1,
+            description: '사용자 ID',
+          },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2024-11-16T04:08:32.919Z',
+            description: '사용자 생성 날짜',
+          },
+          updatedAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2024-11-16T04:08:32.919Z',
+            description: '사용자 업데이트 날짜',
+          },
+          email: {
+            type: 'string',
+            example: 'kyhh39@naver.com',
+            description: '사용자 이메일',
+          },
+          gender: {
+            type: 'string',
+            example: '남자',
+            description: '사용자 성별',
+          },
+          mobile_number: {
+            type: 'string',
+            example: '01092170299',
+            description: '사용자 휴대폰 번호',
+          },
+          role: {
+            type: 'string',
+            example: 'USER',
+            description: '사용자 권한',
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 403,

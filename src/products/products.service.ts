@@ -21,7 +21,7 @@ export class ProductsService {
 
     const product = this.productRepository.create({
       ...productData,
-      images, // 콤마로 구분된 파일 이름들
+      images,
       category,
     });
 

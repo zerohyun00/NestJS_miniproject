@@ -14,6 +14,13 @@ export class AuthController {
     summary: '인증 코드 전송',
     description: '입력한 이메일로 인증 코드를 전송합니다.',
   })
+  @ApiBody({
+    schema: {
+      example: {
+        email: 'user@example.com',
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description: '인증번호가 이메일로 전송되었습니다.',
@@ -60,6 +67,16 @@ export class AuthController {
     summary: '회원가입',
     description: '이메일 인증 후 회원가입을 진행합니다.',
   })
+  @ApiBody({
+    schema: {
+      example: {
+        email: 'user@example.com',
+        gender: '남자',
+        address: '서울시 강남구 테헤란로',
+        mobile_number: '010-1234-5678',
+      },
+    },
+  })
   @ApiResponse({
     status: 201,
     description: '회원가입 성공',
@@ -94,8 +111,8 @@ export class AuthController {
   @ApiBody({
     schema: {
       example: {
-        email: 'user@example.com',
-        password: 'password123',
+        email: 'kyhh392@naver.com',
+        password: '12345',
       },
     },
   })
