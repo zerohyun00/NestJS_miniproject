@@ -30,6 +30,17 @@ export class AuthController {
       },
     },
   })
+  @ApiResponse({
+    status: 400,
+    description: '이미 가입된 이메일입니다.',
+    schema: {
+      example: {
+        message: '이미 가입된 이메일입니다.',
+        error: 'Bad Request',
+        statusCode: 400,
+      },
+    },
+  })
   @Post('send-code')
   async sendVerificationCode(@Body('email') email: string) {
     await this.authService.sendVerificationCode(email);
@@ -46,6 +57,17 @@ export class AuthController {
     schema: {
       example: {
         message: '인증번호가 확인되었습니다.',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: '인증번호가 만료되었거나 존재하지 않습니다.',
+    schema: {
+      example: {
+        message: '인증번호가 만료되었거나 존재하지 않습니다.',
+        error: 'Bad Request',
+        statusCode: 400,
       },
     },
   })
@@ -90,6 +112,17 @@ export class AuthController {
       },
     },
   })
+  @ApiResponse({
+    status: 400,
+    description: '이메일 인증이 완료되지 않았습니다.',
+    schema: {
+      example: {
+        message: '이메일 인증이 완료되지 않았습니다.',
+        error: 'Bad Request',
+        statusCode: 400,
+      },
+    },
+  })
   @Post('register')
   postRegister(@Body() body: RegisterUserDto) {
     return this.authService.registerWithEmail(body);
@@ -105,6 +138,17 @@ export class AuthController {
     schema: {
       example: {
         accessToken: 'jwt-token',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: '존재하지 않는 사용자입니다.',
+    schema: {
+      example: {
+        message: '존재하지 않는 사용자입니다.',
+        error: 'Unauthorized',
+        statusCode: 401,
       },
     },
   })

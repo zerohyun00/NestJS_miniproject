@@ -50,6 +50,16 @@ export class OrdersController {
       },
     },
   })
+  @ApiResponse({
+    status: 500,
+    description: 'Request에 user 프로퍼티가 존재하지 않습니다!',
+    schema: {
+      example: {
+        message: 'Request에 user 프로퍼티가 존재하지 않습니다!',
+        statusCode: 500,
+      },
+    },
+  })
   @Post()
   @UseGuards(AccessTokenGuard)
   createOrder(
@@ -79,6 +89,16 @@ export class OrdersController {
           status: '결제 대기',
         },
       ],
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Request에 user 프로퍼티가 존재하지 않습니다!',
+    schema: {
+      example: {
+        message: 'Request에 user 프로퍼티가 존재하지 않습니다!',
+        statusCode: 500,
+      },
     },
   })
   @Get()
@@ -116,6 +136,16 @@ export class OrdersController {
       },
     },
   })
+  @ApiResponse({
+    status: 500,
+    description: 'Request에 user 프로퍼티가 존재하지 않습니다!',
+    schema: {
+      example: {
+        message: 'Request에 user 프로퍼티가 존재하지 않습니다!',
+        statusCode: 500,
+      },
+    },
+  })
   @Get(':orderId')
   getOrderDetails(@Param('orderId') orderId: number) {
     return this.ordersService.getOrderDetails(orderId);
@@ -136,6 +166,16 @@ export class OrdersController {
     description: '주문이 성공적으로 삭제되었습니다.',
     schema: {
       example: { message: '주문이 삭제되었습니다.' },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Request에 user 프로퍼티가 존재하지 않습니다!',
+    schema: {
+      example: {
+        message: 'Request에 user 프로퍼티가 존재하지 않습니다!',
+        statusCode: 500,
+      },
     },
   })
   @UseGuards(AccessTokenGuard)

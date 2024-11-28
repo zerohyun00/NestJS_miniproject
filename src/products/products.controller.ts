@@ -75,6 +75,26 @@ export class ProductsController {
       },
     },
   })
+  @ApiResponse({
+    status: 400,
+    description: '유효하지 않은 데이터입니다.',
+    schema: {
+      example: {
+        message: '상품 이름은 필수입니다.',
+        statusCode: 400,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: '서버 내부 오류',
+    schema: {
+      example: {
+        message: '서버 내부 오류가 발생했습니다.',
+        statusCode: 500,
+      },
+    },
+  })
   @Post('upload')
   @UseGuards(AccessTokenGuard)
   @Roles(RolesEnum.ADMIN)
@@ -133,8 +153,17 @@ export class ProductsController {
       },
     },
   })
+  @ApiResponse({
+    status: 500,
+    description: '서버 내부 오류',
+    schema: {
+      example: {
+        message: '서버 내부 오류가 발생했습니다.',
+        statusCode: 500,
+      },
+    },
+  })
   @Get()
-  @Roles(RolesEnum.USER)
   getProducts(@Query() query: PaginateProductsDto) {
     return this.productsService.paginateProducts(query);
   }
@@ -157,6 +186,26 @@ export class ProductsController {
         categoryId: 1,
         images: ['image1.png'],
         view_count: 10,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: '상품을 찾을 수 없습니다.',
+    schema: {
+      example: {
+        message: '상품이 존재하지 않습니다.',
+        statusCode: 404,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: '서버 내부 오류',
+    schema: {
+      example: {
+        message: '서버 내부 오류가 발생했습니다.',
+        statusCode: 500,
       },
     },
   })

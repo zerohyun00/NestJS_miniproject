@@ -26,7 +26,6 @@ export class CreateProductDto {
     description: '상품 사이즈 목록',
     example: ['S', 'M', 'L'],
   })
-  @IsArray()
   sizes: string[];
 
   @ApiProperty({ description: '카테고리 ID', example: 1 })

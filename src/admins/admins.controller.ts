@@ -41,7 +41,14 @@ export class AdminsController {
   })
   @ApiResponse({
     status: 401,
-    description: '잘못된 이메일 또는 비밀번호.',
+    description: '잘못된 관리자 계정입니다.',
+    schema: {
+      example: {
+        message: '잘못된 관리자 계정입니다.',
+        error: 'Unauthorized',
+        statusCode: 401,
+      },
+    },
   })
   @Post('login')
   async login(@Body() adminLoginDto: AdminsLoginDto) {
@@ -64,7 +71,14 @@ export class AdminsController {
   })
   @ApiResponse({
     status: 401,
-    description: '권한이 없거나 토큰이 누락되었습니다.',
+    description: '토큰을 제공 해주세요!',
+    schema: {
+      example: {
+        message: '토큰을 제공 해주세요!',
+        error: 'Unauthorized',
+        statusCode: 401,
+      },
+    },
   })
   @UseGuards(AccessTokenGuard)
   @Roles(RolesEnum.ADMIN)
@@ -83,6 +97,17 @@ export class AdminsController {
     schema: {
       example: {
         orderCount: 30,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: '토큰을 제공 해주세요!',
+    schema: {
+      example: {
+        message: '토큰을 제공 해주세요!',
+        error: 'Unauthorized',
+        statusCode: 401,
       },
     },
   })
@@ -108,6 +133,17 @@ export class AdminsController {
       },
     },
   })
+  @ApiResponse({
+    status: 401,
+    description: '토큰을 제공 해주세요!',
+    schema: {
+      example: {
+        message: '토큰을 제공 해주세요!',
+        error: 'Unauthorized',
+        statusCode: 401,
+      },
+    },
+  })
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @Get('most-viewed')
@@ -125,6 +161,17 @@ export class AdminsController {
     schema: {
       example: {
         totalSales: 1200000,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: '토큰을 제공 해주세요!',
+    schema: {
+      example: {
+        message: '토큰을 제공 해주세요!',
+        error: 'Unauthorized',
+        statusCode: 401,
       },
     },
   })
